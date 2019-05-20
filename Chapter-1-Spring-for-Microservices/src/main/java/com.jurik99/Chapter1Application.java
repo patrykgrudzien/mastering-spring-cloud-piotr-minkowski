@@ -4,6 +4,8 @@ import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.boot.context.properties.EnableConfigurationProperties;
 
+import com.jurik99.config.Config;
+
 @SpringBootApplication
 @EnableConfigurationProperties(Config.class)
 public class Chapter1Application {

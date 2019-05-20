@@ -1,4 +1,4 @@
-package com.jurik99;
+package com.jurik99.config;
 
 import lombok.Getter;
 
