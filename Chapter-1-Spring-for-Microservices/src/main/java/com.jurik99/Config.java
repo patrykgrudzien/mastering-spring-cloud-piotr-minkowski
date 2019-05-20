@@ -11,5 +11,5 @@ import java.util.List;
 public class Config {
 
 	@Getter
-	private List<String> servers = new ArrayList<String>();
+	private List<String> servers = new ArrayList<>();
 }
