@@ -13,6 +13,12 @@ logging:
     org.springframework.web: DEBUG
   file: app.log
 
+management:
+  endpoints:
+    web:
+      exposure:
+        include: "*"
+
 # CUSTOM PROPERTIES
 my:
   servers:
