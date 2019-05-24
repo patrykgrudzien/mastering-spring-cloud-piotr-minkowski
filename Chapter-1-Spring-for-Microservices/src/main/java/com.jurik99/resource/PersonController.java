@@ -10,12 +10,11 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.jurik99.model.Person;
+import com.jurik99.repository.PersonRepository;
 import com.jurik99.service.PersonCounterService;
 
 import java.util.ArrayList;
 import java.util.List;
-
-import static java.util.stream.Collectors.toList;
 
 @RestController
 @RequestMapping("/person")
@@ -25,27 +24,37 @@ public class PersonController {
 
     private final PersonCounterService personCounterService;
 
-    public PersonController(final PersonCounterService personCounterService) {
+    private final PersonRepository personRepository;
+
+    public PersonController(final PersonCounterService personCounterService,
+                            final PersonRepository personRepository) {
         this.personCounterService = personCounterService;
+	    this.personRepository = personRepository;
     }
 
     @GetMapping
     public List<Person> findAll() {
-        return people;
+        return personRepository.findAll();
     }
 
     @GetMapping("/{id}")
-    public Person findById(@PathVariable("id") final Long id) {
-        return people.stream()
-                     .filter(p -> p.getId().equals(id))
-                     .findFirst()
-                     .orElseThrow(RuntimeException::new);
+    public Person findById(@PathVariable("id") final String id) {
+        return personRepository.findById(id).orElseThrow(() -> new RuntimeException("Exception!"));
     }
 
+	@GetMapping("/lastName/{lastName}")
+	public List<Person> findByLastName(@PathVariable final String lastName) {
+    	return personRepository.findByLastName(lastName);
+	}
+
+	@GetMapping("/age/{age}")
+	public List<Person> findByAgeGreaterThan(@PathVariable final int age) {
+    	return personRepository.findByAgeGreaterThan(age);
+	}
+
     @PostMapping
-    public Person add(@RequestBody final Person person) {
-        person.setId((long) (people.size() + 1));
-        people.add(person);
+    public Person add(@RequestBody Person person) {
+    	person = personRepository.save(person);
         personCounterService.countNewPersons();
         return person;
     }
@@ -60,11 +69,8 @@ public class PersonController {
     }
 
     @DeleteMapping("/{id}")
-    public void delete(@PathVariable final Long id) {
-        final List<Person> personList = people.stream()
-                                              .filter(it -> it.getId().equals(id))
-                                              .collect(toList());
-        people.removeAll(personList);
+    public void delete(@PathVariable final String id) {
+    	personRepository.deleteById(id);
         personCounterService.countDeletedPersons();
     }
 }
