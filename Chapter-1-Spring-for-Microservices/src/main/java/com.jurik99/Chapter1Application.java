@@ -1,16 +1,7 @@
 package com.jurik99;
 
-import com.jurik99.config.Config;
 import io.micrometer.core.instrument.Meter;
 import io.micrometer.core.instrument.MeterRegistry;
-import org.apache.maven.model.Model;
-import org.apache.maven.model.io.xpp3.MavenXpp3Reader;
-import org.codehaus.plexus.util.xml.pull.XmlPullParserException;
-import org.springframework.boot.SpringApplication;
-import org.springframework.boot.actuate.autoconfigure.metrics.MeterRegistryCustomizer;
-import org.springframework.boot.autoconfigure.SpringBootApplication;
-import org.springframework.boot.context.properties.EnableConfigurationProperties;
-import org.springframework.context.annotation.Bean;
 import springfox.documentation.builders.ApiInfoBuilder;
 import springfox.documentation.builders.PathSelectors;
 import springfox.documentation.builders.RequestHandlerSelectors;
@@ -18,6 +9,18 @@ import springfox.documentation.service.Contact;
 import springfox.documentation.spi.DocumentationType;
 import springfox.documentation.spring.web.plugins.Docket;
 import springfox.documentation.swagger2.annotations.EnableSwagger2;
+
+import org.springframework.boot.SpringApplication;
+import org.springframework.boot.actuate.autoconfigure.metrics.MeterRegistryCustomizer;
+import org.springframework.boot.autoconfigure.SpringBootApplication;
+import org.springframework.boot.context.properties.EnableConfigurationProperties;
+import org.springframework.context.annotation.Bean;
+
+import org.apache.maven.model.Model;
+import org.apache.maven.model.io.xpp3.MavenXpp3Reader;
+import org.codehaus.plexus.util.xml.pull.XmlPullParserException;
+
+import com.jurik99.config.Config;
 
 import java.io.FileReader;
 import java.io.IOException;
@@ -54,12 +57,14 @@ public class Chapter1Application {
     @Bean
     public MeterRegistryCustomizer<MeterRegistry> addPersonRegistry() {
         return registry -> registry.config()
-                .namingConvention()
-                .name(PERSON_ADD_METER_NAME, Meter.Type.COUNTER);
+                                   .namingConvention()
+                                   .name(PERSON_ADD_METER_NAME, Meter.Type.COUNTER);
     }
 
     @Bean
     public MeterRegistryCustomizer<MeterRegistry> deletePersonRegistry() {
-        return registry -> registry.config().namingConvention().name(PERSON_DELETE_METER_NAME, Meter.Type.COUNTER);
+        return registry -> registry.config()
+                                   .namingConvention()
+                                   .name(PERSON_DELETE_METER_NAME, Meter.Type.COUNTER);
     }
 }

@@ -2,6 +2,7 @@ package com.jurik99.service;
 
 import io.micrometer.core.instrument.Counter;
 import io.micrometer.core.instrument.MeterRegistry;
+
 import org.springframework.stereotype.Service;
 
 import static com.jurik99.Chapter1Application.PERSON_ADD_METER_NAME;
