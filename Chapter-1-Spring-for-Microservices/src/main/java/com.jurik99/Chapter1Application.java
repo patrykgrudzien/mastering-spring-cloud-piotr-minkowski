@@ -1,5 +1,16 @@
 package com.jurik99;
 
+import com.jurik99.config.Config;
+import io.micrometer.core.instrument.Meter;
+import io.micrometer.core.instrument.MeterRegistry;
+import org.apache.maven.model.Model;
+import org.apache.maven.model.io.xpp3.MavenXpp3Reader;
+import org.codehaus.plexus.util.xml.pull.XmlPullParserException;
+import org.springframework.boot.SpringApplication;
+import org.springframework.boot.actuate.autoconfigure.metrics.MeterRegistryCustomizer;
+import org.springframework.boot.autoconfigure.SpringBootApplication;
+import org.springframework.boot.context.properties.EnableConfigurationProperties;
+import org.springframework.context.annotation.Bean;
 import springfox.documentation.builders.ApiInfoBuilder;
 import springfox.documentation.builders.PathSelectors;
 import springfox.documentation.builders.RequestHandlerSelectors;
@@ -8,17 +19,6 @@ import springfox.documentation.spi.DocumentationType;
 import springfox.documentation.spring.web.plugins.Docket;
 import springfox.documentation.swagger2.annotations.EnableSwagger2;
 
-import org.springframework.boot.SpringApplication;
-import org.springframework.boot.autoconfigure.SpringBootApplication;
-import org.springframework.boot.context.properties.EnableConfigurationProperties;
-import org.springframework.context.annotation.Bean;
-
-import org.apache.maven.model.Model;
-import org.apache.maven.model.io.xpp3.MavenXpp3Reader;
-import org.codehaus.plexus.util.xml.pull.XmlPullParserException;
-
-import com.jurik99.config.Config;
-
 import java.io.FileReader;
 import java.io.IOException;
 
@@ -26,6 +26,9 @@ import java.io.IOException;
 @EnableConfigurationProperties(Config.class)
 @EnableSwagger2
 public class Chapter1Application {
+
+    public static final String PERSON_ADD_METER_NAME = "services.person.add";
+    public static final String PERSON_DELETE_METER_NAME = "services.person.deleted";
 
 	public static void main(final String[] args) {
 		SpringApplication.run(Chapter1Application.class);
@@ -46,5 +49,17 @@ public class Chapter1Application {
                 .apis(RequestHandlerSelectors.basePackage("com.jurik99.resource"))
                 .paths(PathSelectors.any()).build()
                 .apiInfo(apiInfoBuilder.build());
+    }
+
+    @Bean
+    public MeterRegistryCustomizer<MeterRegistry> addPersonRegistry() {
+        return registry -> registry.config()
+                .namingConvention()
+                .name(PERSON_ADD_METER_NAME, Meter.Type.COUNTER);
+    }
+
+    @Bean
+    public MeterRegistryCustomizer<MeterRegistry> deletePersonRegistry() {
+        return registry -> registry.config().namingConvention().name(PERSON_DELETE_METER_NAME, Meter.Type.COUNTER);
     }
 }
