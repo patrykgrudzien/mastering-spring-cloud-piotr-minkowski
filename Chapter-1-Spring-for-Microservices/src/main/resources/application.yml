@@ -4,6 +4,8 @@ server:
 spring:
   application:
     name: first-service
+  profiles:
+    active: production
 
 logging:
   pattern:
@@ -26,3 +28,20 @@ my:
   servers:
     - dev.bar.com
     - foo.bar.com
+
+---
+
+spring:
+  profiles: production
+  application:
+    name: first-service
+  autoconfigure:
+    exclude: org.springframework.boot.autoconfigure.mongo.embedded.EmbeddedMongoAutoConfiguration
+  data:
+    mongodb:
+      host: localhost
+      port: 27017
+      database: test-database
+      username: root
+      password: example
+      authentication-database: admin

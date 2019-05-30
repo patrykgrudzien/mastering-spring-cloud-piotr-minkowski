@@ -13,17 +13,13 @@ import com.jurik99.model.Person;
 import com.jurik99.repository.PersonRepository;
 import com.jurik99.service.PersonCounterService;
 
-import java.util.ArrayList;
 import java.util.List;
 
 @RestController
 @RequestMapping("/person")
 public class PersonController {
 
-    private List<Person> people = new ArrayList<>();
-
     private final PersonCounterService personCounterService;
-
     private final PersonRepository personRepository;
 
     public PersonController(final PersonCounterService personCounterService,
@@ -61,11 +57,7 @@ public class PersonController {
 
     @PutMapping
     public void update(@RequestBody final Person p) {
-        final Person person = people.stream()
-                                    .filter(it -> it.getId().equals(p.getId()))
-                                    .findFirst()
-                                    .orElseThrow(RuntimeException::new);
-        people.set(people.indexOf(person), p);
+        personRepository.save(p);
     }
 
     @DeleteMapping("/{id}")
