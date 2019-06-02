@@ -24,7 +24,8 @@ public class ServiceInstanceResource {
         final List<ServiceInstance> instances = discoveryClient.getInstances("CLIENT-SERVICE");
         log.info("INSTANCES: count={}", instances.size());
 
-        instances.forEach(instance -> log.info("INSTANCE: id={}, port={}", instance.getServiceId(), instance.getPort()));
+        instances.forEach(instance -> log.info("INSTANCE: id={}, port={}",
+                                               instance.getServiceId(), instance.getPort()));
         return instances;
     }
 }
